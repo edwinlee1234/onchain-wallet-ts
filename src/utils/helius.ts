@@ -25,56 +25,232 @@ const helius = new Helius(HELIUS_API_KEY);
 export type Txs = TxData[];
 
 export interface TxData {
-  accountData: AccountDaum[];
-  description: string;
-  events: Events;
-  fee: number;
-  feePayer: string;
-  nativeTransfers: NativeTransfer[];
-  signature: string;
-  slot: number;
-  source: string;
-  timestamp: number;
-  tokenTransfers: TokenTransfer[];
-  type: string;
-}
-
-export interface AccountDaum {
-  account: string;
-  nativeBalanceChange: number;
-  tokenBalanceChanges: TokenBalanceChange[];
-}
-
-export interface TokenBalanceChange {
-  mint: string;
-  rawTokenAmount: RawTokenAmount;
-  tokenAccount: string;
-  userAccount: string;
-}
-
-export interface RawTokenAmount {
-  decimals: number;
-  tokenAmount: string;
-}
-
-export interface Events {
-  swap: any;
+  description: string
+  type: string
+  source: string
+  fee: number
+  feePayer: string
+  signature: string
+  slot: number
+  timestamp: number
+  nativeTransfers: NativeTransfer[]
+  tokenTransfers: TokenTransfer[]
+  accountData: AccountDaum[]
+  transactionError: TransactionError
+  instructions: Instruction[]
+  events: Events
 }
 
 export interface NativeTransfer {
-  amount: number;
-  fromUserAccount: string;
-  toUserAccount: string;
+  fromUserAccount: string
+  toUserAccount: string
+  amount: number
 }
 
 export interface TokenTransfer {
-  fromTokenAccount: string;
-  fromUserAccount: string;
-  mint: string;
-  toTokenAccount: string;
-  toUserAccount: string;
-  tokenAmount: number;
-  tokenStandard: string;
+  fromUserAccount: string
+  toUserAccount: string
+  fromTokenAccount: string
+  toTokenAccount: string
+  tokenAmount: number
+  mint: string
+}
+
+export interface AccountDaum {
+  account: string
+  nativeBalanceChange: number
+  tokenBalanceChanges: TokenBalanceChange[]
+}
+
+export interface TokenBalanceChange {
+  userAccount: string
+  tokenAccount: string
+  mint: string
+  rawTokenAmount: RawTokenAmount
+}
+
+export interface RawTokenAmount {
+  tokenAmount: string
+  decimals: number
+}
+
+export interface TransactionError {
+  error: string
+}
+
+export interface Instruction {
+  accounts: string[]
+  data: string
+  programId: string
+  innerInstructions: InnerInstruction[]
+}
+
+export interface InnerInstruction {
+  accounts: string[]
+  data: string
+  programId: string
+}
+
+export interface Events {
+  nft: Nft
+  swap: Swap
+  compressed: Compressed
+  distributeCompressionRewards: DistributeCompressionRewards
+  setAuthority: SetAuthority
+}
+
+export interface Nft {
+  description: string
+  type: string
+  source: string
+  amount: number
+  fee: number
+  feePayer: string
+  signature: string
+  slot: number
+  timestamp: number
+  saleType: string
+  buyer: string
+  seller: string
+  staker: string
+  nfts: Nft2[]
+}
+
+export interface Nft2 {
+  mint: string
+  tokenStandard: string
+}
+
+export interface Swap {
+  nativeInput: NativeInput
+  nativeOutput: NativeOutput
+  tokenInputs: TokenInput[]
+  tokenOutputs: TokenOutput[]
+  tokenFees: TokenFee[]
+  nativeFees: NativeFee[]
+  innerSwaps: InnerSwap[]
+}
+
+export interface NativeInput {
+  account: string
+  amount: string
+}
+
+export interface NativeOutput {
+  account: string
+  amount: string
+}
+
+export interface TokenInput {
+  userAccount: string
+  tokenAccount: string
+  mint: string
+  rawTokenAmount: RawTokenAmount2
+}
+
+export interface RawTokenAmount2 {
+  tokenAmount: string
+  decimals: number
+}
+
+export interface TokenOutput {
+  userAccount: string
+  tokenAccount: string
+  mint: string
+  rawTokenAmount: RawTokenAmount3
+}
+
+export interface RawTokenAmount3 {
+  tokenAmount: string
+  decimals: number
+}
+
+export interface TokenFee {
+  userAccount: string
+  tokenAccount: string
+  mint: string
+  rawTokenAmount: RawTokenAmount4
+}
+
+export interface RawTokenAmount4 {
+  tokenAmount: string
+  decimals: number
+}
+
+export interface NativeFee {
+  account: string
+  amount: string
+}
+
+export interface InnerSwap {
+  tokenInputs: TokenInput2[]
+  tokenOutputs: TokenOutput2[]
+  tokenFees: TokenFee2[]
+  nativeFees: NativeFee2[]
+  programInfo: ProgramInfo
+}
+
+export interface TokenInput2 {
+  fromUserAccount: string
+  toUserAccount: string
+  fromTokenAccount: string
+  toTokenAccount: string
+  tokenAmount: number
+  mint: string
+}
+
+export interface TokenOutput2 {
+  fromUserAccount: string
+  toUserAccount: string
+  fromTokenAccount: string
+  toTokenAccount: string
+  tokenAmount: number
+  mint: string
+}
+
+export interface TokenFee2 {
+  fromUserAccount: string
+  toUserAccount: string
+  fromTokenAccount: string
+  toTokenAccount: string
+  tokenAmount: number
+  mint: string
+}
+
+export interface NativeFee2 {
+  fromUserAccount: string
+  toUserAccount: string
+  amount: number
+}
+
+export interface ProgramInfo {
+  source: string
+  account: string
+  programName: string
+  instructionName: string
+}
+
+export interface Compressed {
+  type: string
+  treeId: string
+  assetId: string
+  leafIndex: number
+  instructionIndex: number
+  innerInstructionIndex: number
+  newLeafOwner: string
+  oldLeafOwner: string
+}
+
+export interface DistributeCompressionRewards {
+  amount: number
+}
+
+export interface SetAuthority {
+  account: string
+  from: string
+  to: string
+  instructionIndex: number
+  innerInstructionIndex: number
 }
 
 // Formats token amount by dividing by the appropriate decimal power
@@ -84,7 +260,7 @@ export function formatAmount(amount, decimals): number {
 
 // Processes swap event data from webhook into a standardized format
 export function processSwapData(webhookData: TxData): txsTableRow {
-  const swapEvent = webhookData.events[0];
+  const swapEvent = webhookData.events.swap;
   let processedData: txsTableRow = {
     account: '',
     token_in_address: '',
