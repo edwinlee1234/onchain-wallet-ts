@@ -32,7 +32,7 @@ async function sumTweets(
       !twitter.includes('/status/')
     ) {
       let screenname = urlParts[urlParts.length - 1].split('?')[0];
-      
+
       const timelineResult = await getUserTimeline(screenname);
 
       if (timelineResult) {
@@ -68,11 +68,16 @@ async function sumTweets(
 }
 
 // Generates a summary of tweets using AI
-async function genSum(symbol:string, search_tweets:searchTwitterRes[], account_tweets:UserTimelineTweet[], type = 'search'): Promise<string> {
+async function genSum(
+  symbol: string,
+  search_tweets: searchTwitterRes[],
+  account_tweets: UserTimelineTweet[],
+  type = 'search'
+): Promise<string> {
   try {
-    let tweetData:string[] = [];
-    let promptPrefix:string = '';
-    let promptSuffix:string = '';
+    let tweetData: string[] = [];
+    let promptPrefix: string = '';
+    let promptSuffix: string = '';
 
     if (type === 'account') {
       promptPrefix = `請總結關於 ${symbol} 的帳號推文:`;
@@ -140,7 +145,7 @@ ${promptSuffix}`;
 }
 
 // Sends the tweet summary to Telegram as a reply to a message
-export async function sendSumMessage(tokenInfo:TokenInfo, replyToMessageId:string|null) {
+export async function sendAISumMessage(tokenInfo: TokenInfo, replyToMessageId: string | null) {
   const summaryResult = await sumTweets(tokenInfo);
   if (!summaryResult) {
     console.log(`Unable to get tweet summary for ${tokenInfo.symbol}`);

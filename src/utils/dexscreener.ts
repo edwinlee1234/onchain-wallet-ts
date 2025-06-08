@@ -167,7 +167,7 @@ export class TokenInfo {
 // DexScreener API wrapper class
 export class DexScreener {
   // Fetches token information from DexScreener API
-  static async getTokenInfo(chainId, tokenAddress):Promise<TokenInfo> {
+  static async getTokenInfo(chainId, tokenAddress): Promise<TokenInfo> {
     const { data: tokenList } = await client
       .get<TokenList>(`https://api.dexscreener.com/tokens/v1/${chainId}/${tokenAddress}`)
       .catch((error) => {
@@ -176,7 +176,7 @@ export class DexScreener {
       });
 
     if (tokenList.length == 0) {
-      throw new Error('token info not found')
+      throw new Error('token info not found');
     }
 
     return new TokenInfo(tokenList);

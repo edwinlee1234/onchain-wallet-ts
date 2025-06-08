@@ -6,6 +6,9 @@ dotenv.config();
 type sendRes = {
   ok: boolean;
   description: string | undefined;
+  result: {
+    message_id: string;
+  };
 };
 
 // Sends a message to Telegram chat with optional reply functionality
