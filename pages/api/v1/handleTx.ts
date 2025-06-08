@@ -111,7 +111,8 @@ const MIN_MARKET_CAP = 100000; // 100k
 
 async function alertEvent(tx: txsTableRow) {
   try {
-    if (tx.token_out_address !== SOL_ADDRESS && tx.token_out_address !== USDC_ADDRESS) {
+    // sell event
+    if (tx.token_out_address === SOL_ADDRESS || tx.token_out_address === USDC_ADDRESS) {
       return;
     }
 
